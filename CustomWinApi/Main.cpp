@@ -9,7 +9,6 @@
 int main(){
     #ifdef _WIN64
         ShowBanner();
-        std::wcout.imbue(std::locale(""));
 
         wchar_t dllName[] = L"ntdll.dll";
         LPCSTR procName = "NtQuerySystemInformation";

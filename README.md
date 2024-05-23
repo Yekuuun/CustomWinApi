@@ -9,9 +9,17 @@
 
 this repo contains base code for reimplementing a custom version of GetModuleHandle( ) & GetProcAddress( ) functions without any imports crafting all headers by my hand using online ressources & github repos.
 
-## GetModuleHandle( )
+## Running program 
 
-## GetProcAddress( ) 
+`g++ Main.cpp CustomWinApi.cpp -o CustomWinApi -m64`
+
+
+## GetModuleHandle( ) & GetProcAddress( )
+
+Base functions declaration :
+
+[WINDOWS GetProcAddress](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
+[WINDOWS GetModuleHandle](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
 
 ### Greetings
 
