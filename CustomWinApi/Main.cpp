@@ -12,10 +12,10 @@ int main(){
         std::wcout.imbue(std::locale(""));
 
         wchar_t dllName[] = L"ntdll.dll";
+        LPCSTR procName = "NtQuerySystemInformation";
 
         ///calling GetModuleHandle for this example.
         HMODULE hModule = GetModuleHandle(dllName);
-        LPCSTR procName = "NtQuerySystemInformation";
 
         if (hModule != nullptr)
         {
