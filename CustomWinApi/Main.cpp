@@ -37,6 +37,16 @@ int main(){
 
         ///---------------------------------------------
 
+        ///listing running process using NtQuerySystemInformation
+
+        BOOL listProcess = GetProcessInformation();
+        if(listProcess == false)
+        {
+            return EXIT_FAILURE;
+        }
+
+        ///
+
         return EXIT_SUCCESS;
     #else
         std::cout << "code designed for x64" << std::end;

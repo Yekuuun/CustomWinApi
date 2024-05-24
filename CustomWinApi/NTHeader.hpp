@@ -5,6 +5,7 @@
 typedef void VOID;
 typedef void* PVOID;
 typedef void* LPVOID;
+typedef void* HANDLE;
 typedef void* HMODULE;
 
 typedef char* LPSTR;
@@ -12,10 +13,15 @@ typedef const char* LPCSTR;
 typedef unsigned int UINT;
 typedef unsigned long long UINT64;
 typedef bool BOOL;
+typedef size_t SIZE_T;
 
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 typedef long LONG;
+typedef unsigned long ULONG;
+typedef unsigned long* PULONG;
+typedef __int64 LONGLONG;
+typedef LONG KPRIORITY;
 typedef unsigned long long ULONGLONG;
 typedef unsigned char BYTE;
 
@@ -25,7 +31,18 @@ typedef unsigned char BYTE;
 #define WINAPI __stdcall
 #endif
 
-typedef void (*FAPROC)();
+#define NTAPI __stdcall
+
+typedef LONG NTSTATUS;
+
+#define NT_SUCCESS(Status) ((NTSTATUS)(Status) >= 0)
+
+#define STATUS_SUCCESS ((NTSTATUS)0x00000000L)
+#define STATUS_INFO_LENGTH_MISMATCH ((NTSTATUS)0xC0000004L)
+#define STATUS_BUFFER_TOO_SMALL ((NTSTATUS)0xC0000023L)
+#define STATUS_UNSUCCESSFUL ((NTSTATUS)0xC0000001L)
+#define STATUS_ACCESS_VIOLATION ((NTSTATUS)0xC0000005L)
+#define STATUS_INVALID_PARAMETER ((NTSTATUS)0xC000000DL)
 
 //----------------------------------------------
 
@@ -302,3 +319,144 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
     DWORD   AddressOfNames;         // RVA from base of image
     DWORD   AddressOfNameOrdinals;  // RVA from base of image
 } IMAGE_EXPORT_DIRECTORY, * PIMAGE_EXPORT_DIRECTORY;
+
+//-----------------NTQUERYSYSTEMINFORMATION NEEDS----------------
+
+typedef enum _SYSTEM_INFORMATION_CLASS
+{
+    SystemBasicInformation = 0,
+    SystemProcessorInformation = 1,             // obsolete...delete
+    SystemPerformanceInformation = 2,
+    SystemTimeOfDayInformation = 3,
+    SystemPathInformation = 4,
+    SystemProcessInformation = 5,
+    SystemCallCountInformation = 6,
+    SystemDeviceInformation = 7,
+    SystemProcessorPerformanceInformation = 8,
+    SystemFlagsInformation = 9,
+    SystemCallTimeInformation = 10,
+    SystemModuleInformation = 11,
+    SystemLocksInformation = 12,
+    SystemStackTraceInformation = 13,
+    SystemPagedPoolInformation = 14,
+    SystemNonPagedPoolInformation = 15,
+    SystemHandleInformation = 16,
+    SystemObjectInformation = 17,
+    SystemPageFileInformation = 18,
+    SystemVdmInstemulInformation = 19,
+    SystemVdmBopInformation = 20,
+    SystemFileCacheInformation = 21,
+    SystemPoolTagInformation = 22,
+    SystemInterruptInformation = 23,
+    SystemDpcBehaviorInformation = 24,
+    SystemFullMemoryInformation = 25,
+    SystemLoadGdiDriverInformation = 26,
+    SystemUnloadGdiDriverInformation = 27,
+    SystemTimeAdjustmentInformation = 28,
+    SystemSummaryMemoryInformation = 29,
+    SystemMirrorMemoryInformation = 30,
+    SystemPerformanceTraceInformation = 31,
+    SystemObsolete0 = 32,
+    SystemExceptionInformation = 33,
+    SystemCrashDumpStateInformation = 34,
+    SystemKernelDebuggerInformation = 35,
+    SystemContextSwitchInformation = 36,
+    SystemRegistryQuotaInformation = 37,
+    SystemExtendServiceTableInformation = 38,
+    SystemPrioritySeperation = 39,
+    SystemVerifierAddDriverInformation = 40,
+    SystemVerifierRemoveDriverInformation = 41,
+    SystemProcessorIdleInformation = 42,
+    SystemLegacyDriverInformation = 43,
+    SystemCurrentTimeZoneInformation = 44,
+    SystemLookasideInformation = 45,
+    SystemTimeSlipNotification = 46,
+    SystemSessionCreate = 47,
+    SystemSessionDetach = 48,
+    SystemSessionInformation = 49,
+    SystemRangeStartInformation = 50,
+    SystemVerifierInformation = 51,
+    SystemVerifierThunkExtend = 52,
+    SystemSessionProcessInformation = 53,
+    SystemLoadGdiDriverInSystemSpace = 54,
+    SystemNumaProcessorMap = 55,
+    SystemPrefetcherInformation = 56,
+    SystemExtendedProcessInformation = 57,
+    SystemRecommendedSharedDataAlignment = 58,
+    SystemComPlusPackage = 59,
+    SystemNumaAvailableMemory = 60,
+    SystemProcessorPowerInformation = 61,
+    SystemEmulationBasicInformation = 62,
+    SystemEmulationProcessorInformation = 63,
+    SystemExtendedHandleInformation = 64,
+    SystemLostDelayedWriteInformation = 65,
+    SystemBigPoolInformation = 66,
+    SystemSessionPoolTagInformation = 67,
+    SystemSessionMappedViewInformation = 68,
+    SystemHotpatchInformation = 69,
+    SystemObjectSecurityMode = 70,
+    SystemWatchdogTimerHandler = 71,
+    SystemWatchdogTimerInformation = 72,
+    SystemLogicalProcessorInformation = 73,
+    SystemWow64SharedInformation = 74,
+    SystemRegisterFirmwareTableInformationHandler = 75,
+    SystemFirmwareTableInformation = 76,
+    SystemModuleInformationEx = 77,
+    SystemVerifierTriageInformation = 78,
+    SystemSuperfetchInformation = 79,
+    SystemMemoryListInformation = 80,
+    SystemFileCacheInformationEx = 81,
+    MaxSystemInfoClass = 82  // MaxSystemInfoClass should always be the last enum
+
+} SYSTEM_INFORMATION_CLASS;
+
+typedef union _LARGE_INTEGER {
+    struct {
+        DWORD LowPart;
+        LONG HighPart;
+    };
+    struct {
+        DWORD LowPart;
+        LONG HighPart;
+    } u;
+    LONGLONG QuadPart;
+} LARGE_INTEGER;
+
+
+typedef struct {
+    ULONG PriorityClass;
+    ULONG PrioritySubClass;
+} KSPRIORITY, *PKSPRIORITY;
+
+typedef struct _SYSTEM_PROCESS_INFORMATION {
+    ULONG NextEntryOffset;
+    ULONG NumberOfThreads;
+    BYTE Reserved1[48];
+    UNICODE_STRING ImageName;
+    KPRIORITY BasePriority;
+    HANDLE UniqueProcessId;
+    PVOID Reserved2;
+    ULONG HandleCount;
+    ULONG SessionId;
+    PVOID Reserved3;
+    SIZE_T PeakVirtualSize;
+    SIZE_T VirtualSize;
+    ULONG Reserved4;
+    SIZE_T PeakWorkingSetSize;
+    SIZE_T WorkingSetSize;
+    PVOID Reserved5;
+    SIZE_T QuotaPagedPoolUsage;
+    PVOID Reserved6;
+    SIZE_T QuotaNonPagedPoolUsage;
+    SIZE_T PagefileUsage;
+    SIZE_T PeakPagefileUsage;
+    SIZE_T PrivatePageCount;
+    LARGE_INTEGER Reserved7[6];
+} SYSTEM_PROCESS_INFORMATION;
+
+typedef NTSTATUS NTAPI NTQUERYSYSTEMINFORMATION (
+    SYSTEM_INFORMATION_CLASS SystemInformationClass,
+    PVOID SystemInformation,
+    ULONG SystemInformationLength,
+    PULONG ReturnLength
+); typedef NTQUERYSYSTEMINFORMATION* PNTQUERYSYSTEMINFORMATION;

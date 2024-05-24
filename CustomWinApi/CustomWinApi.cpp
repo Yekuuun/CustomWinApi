@@ -21,6 +21,7 @@ HMODULE WINAPI GetModuleHandle(wchar_t* moduleName){
     {
         return nullptr;
     }
+
     PTIB ptrTib = (PTIB)GetTibAddress();
     PPEB ptrPeb = ptrTib->pPEB;
 
@@ -54,7 +55,6 @@ HMODULE WINAPI GetModuleHandle(wchar_t* moduleName){
     return nullptr;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //  Equivalent to the Windows api function GetProcAddress
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,6 @@ PVOID GetProcAddress(HMODULE hModule, LPCSTR procName){
     //ptr to IMAGE_NT_HEADER
     auto ptrImageNtHeader = (PIMAGE_NT_HEADERS64)(dllAddress + ptrImageDosHeader->e_lfanew);
 
-
     //ptr to IMAGE_OPTIONAL_HEADER
     PIMAGE_OPTIONAL_HEADER64 ptrImageOptionalHeader = &ptrImageNtHeader->OptionalHeader;
 
@@ -110,7 +109,6 @@ PVOID GetProcAddress(HMODULE hModule, LPCSTR procName){
 }
 
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //  Retrieving address of current PEB
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,6 +129,25 @@ PVOID GetPebAddress(){
 /// <returns>returns the address of the current process PEB</returns>
 PVOID GetTibAddress(){
     return reinterpret_cast<PVOID>(__readgsqword(TIB_OFFSET));
+}
+
+/*
+ * GetProcessInformation
+ * Listing process information
+ * returns TRUE on function success
+ */
+BOOL GetProcessInformation(){
+    wchar_t dllName[] = L"ntdll.dll";
+    auto ptrNtQuerySystemInformation =(PNTQUERYSYSTEMINFORMATION) GetProcAddress(GetModuleHandle(dllName), "NtQuerySystemInformation");
+
+    if(ptrNtQuerySystemInformation == nullptr)
+    {
+        std::cout << "unable to get pointer to NtQuerySystemInformation function" << std::endl;
+        return false;
+    }
+
+
+    return true;
 }
 
 /*

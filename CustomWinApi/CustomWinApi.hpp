@@ -41,6 +41,13 @@ PVOID GetPebAddress();
 PVOID GetTibAddress();
 
 /*
+ * GetProcessInformation
+ * Listing process information
+ * returns TRUE on function success
+ */
+BOOL GetProcessInformation();
+
+/*
 * StringContains
 *
 * Use: Case Insensitive String Contains Check
