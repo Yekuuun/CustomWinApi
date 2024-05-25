@@ -12,20 +12,30 @@ this repo contains base code for reimplementing a custom version of GetModuleHan
 
 `./CustomWinApi`
 
+---
 
-## GetModuleHandle( ) & GetProcAddress( )
+## Functions demo
+<img src="https://github.com/Yekuuun/CustomWinApi/blob/main/assets/Functions.png"></img>
+
+### GetModuleHandle( ) && GetProcAddress( )
 
 <img src="https://github.com/Yekuuun/CustomWinApi/blob/main/assets/GetModuleHandle.png"></img>
 
+### Getting NtQuerySystemInformation to list processes 
+
+<img src="https://github.com/Yekuuun/CustomWinApi/blob/main/assets/ListProcess.png"></img>
+
 I used process hacker to check my code & address returned by GetModuleHandle( ) :)
 
-**Base windows functions declaration :**
+---
+
+## Base windows functions declaration :
 
 [WINDOWS GetProcAddress](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress) <br> <br>
 [WINDOWS GetModuleHandle](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
 
 ---
 
-### Greetings
+## Greetings
 
 - [ARSIUM](https://github.com/arsium) for NTHeader.hpp & windows internals advices
