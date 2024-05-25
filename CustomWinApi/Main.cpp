@@ -40,12 +40,12 @@ int main(){
         ///listing running process using NtQuerySystemInformation
 
         BOOL listProcess = GetProcessInformation();
-        if(listProcess == false)
+        if(!listProcess)
         {
             return EXIT_FAILURE;
         }
 
-        ///
+        ///---------------------------------------------
 
         return EXIT_SUCCESS;
     #else

@@ -92,16 +92,16 @@ PVOID GetProcAddress(HMODULE hModule, LPCSTR procName){
     //address of AddressOfNames
     auto rvaNames = (DWORD*)(dllAddress + ptrImageExportDirectory->AddressOfNames);
     auto rvaOrdinalsNames = (WORD*)(dllAddress + ptrImageExportDirectory->AddressOfNameOrdinals);
+    auto rvaFunction = (DWORD*)(dllAddress + ptrImageExportDirectory->AddressOfFunctions);
 
     //looping through names exported
     for(int i = 0; i < ptrImageExportDirectory->NumberOfNames; i++)
     {
         char* functionName = (char*)(dllAddress + rvaNames[i]);
-
         //compare strings
         if(CompareStringsA(functionName, procName))
         {
-            return (LPVOID)(dllAddress + rvaNames[rvaOrdinalsNames[i]]);
+            return (LPVOID)(dllAddress + rvaFunction[rvaOrdinalsNames[i]]);
         }
     }
 
@@ -137,16 +137,44 @@ PVOID GetTibAddress(){
  * returns TRUE on function success
  */
 BOOL GetProcessInformation(){
-    wchar_t dllName[] = L"ntdll.dll";
-    auto ptrNtQuerySystemInformation =(PNTQUERYSYSTEMINFORMATION) GetProcAddress(GetModuleHandle(dllName), "NtQuerySystemInformation");
+    wchar_t dllName[]      = L"ntdll.dll";
+    ULONG sizePtr          = 0;
+    ULONG bufferSize       = 0;
+    LPVOID buffer          = nullptr;
 
-    if(ptrNtQuerySystemInformation == nullptr)
+    //getting address of NtQuerySystemInformation using custom GetModuleHandle() & GetProcAddress()
+    PNTQUERYSYSTEMINFORMATION ptrNtQuerySystemInformation = (PNTQUERYSYSTEMINFORMATION)GetProcAddress(GetModuleHandle(dllName), "NtQuerySystemInformation");
+
+    NTSTATUS status = ptrNtQuerySystemInformation(SystemProcessInformation, nullptr, sizePtr, &bufferSize);
+
+    while(status != STATUS_SUCCESS)
     {
-        std::cout << "unable to get pointer to NtQuerySystemInformation function" << std::endl;
+        buffer = malloc(bufferSize);
+        sizePtr = bufferSize;
+        if(buffer == nullptr)
+        {
+            std::cout << "[-] error allocating memory" << std::endl;
+            return false;
+        }
+        status = ptrNtQuerySystemInformation(SystemProcessInformation, buffer, sizePtr, &bufferSize);
+    }
+
+    PSYSTEM_PROCESS_INFORMATION ptrProcessInfo = (PSYSTEM_PROCESS_INFORMATION)buffer;
+
+    if(ptrProcessInfo == nullptr)
+    {
+        std::cout << "[-] nullptr for process informations" <<std::endl;
         return false;
     }
 
+    while(ptrProcessInfo->NextEntryOffset)
+    {
+        std::cout << "[*] PROCESS ID : " << std::hex << ptrProcessInfo->UniqueProcessId << std::endl;
 
+        ptrProcessInfo = (PSYSTEM_PROCESS_INFORMATION)((ULONG_PTR)ptrProcessInfo + ptrProcessInfo->NextEntryOffset);
+    }
+
+    free(buffer);
     return true;
 }
 
