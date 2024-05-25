@@ -167,6 +167,8 @@ BOOL GetProcessInformation(){
         return false;
     }
 
+    std::cout << "\nListing Processes running using NtQuerySystemInformations:" << std::endl;
+    std::cout << "---------------------------------------------" << std::endl;
     while(ptrProcessInfo->NextEntryOffset)
     {
         std::cout << "[*] PROCESS ID : " << std::hex << ptrProcessInfo->UniqueProcessId << std::endl;

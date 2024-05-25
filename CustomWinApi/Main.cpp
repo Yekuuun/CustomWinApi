@@ -38,7 +38,6 @@ int main(){
         ///---------------------------------------------
 
         ///listing running process using NtQuerySystemInformation
-
         BOOL listProcess = GetProcessInformation();
         if(!listProcess)
         {
