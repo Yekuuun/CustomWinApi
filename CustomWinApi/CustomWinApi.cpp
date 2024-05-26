@@ -164,10 +164,11 @@ BOOL GetProcessInformation(){
     if(ptrProcessInfo == nullptr)
     {
         std::cout << "[-] nullptr for process informations" <<std::endl;
+        free(buffer);
         return false;
     }
 
-    std::cout << "\nListing Processes running using NtQuerySystemInformations:" << std::endl;
+    std::cout << "\nListing Processes running using NtQuerySystemInformation :" << std::endl;
     std::cout << "---------------------------------------------" << std::endl;
     while(ptrProcessInfo->NextEntryOffset)
     {
