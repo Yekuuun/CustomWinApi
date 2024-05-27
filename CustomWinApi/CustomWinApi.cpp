@@ -147,7 +147,7 @@ BOOL GetProcessInformation(){
 
     NTSTATUS status = ptrNtQuerySystemInformation(SystemProcessInformation, nullptr, sizePtr, &bufferSize);
 
-    while(status != STATUS_SUCCESS)
+    while(status == STATUS_INFO_LENGTH_MISMATCH)
     {
         buffer = malloc(bufferSize);
         sizePtr = bufferSize;
@@ -157,6 +157,12 @@ BOOL GetProcessInformation(){
             return false;
         }
         status = ptrNtQuerySystemInformation(SystemProcessInformation, buffer, sizePtr, &bufferSize);
+    }
+
+    if(status != STATUS_SUCCESS)
+    {
+        std::cout << "[-] error calling NtQuerySystemInformation" << std::endl;
+        return false;
     }
 
     PSYSTEM_PROCESS_INFORMATION ptrProcessInfo = (PSYSTEM_PROCESS_INFORMATION)buffer;
@@ -172,7 +178,9 @@ BOOL GetProcessInformation(){
     std::cout << "---------------------------------------------" << std::endl;
     while(ptrProcessInfo->NextEntryOffset)
     {
-        std::cout << "[*] PROCESS ID : " << std::hex << ptrProcessInfo->UniqueProcessId << std::endl;
+        ULONG processId = (ULONG)(ULONG_PTR )ptrProcessInfo->UniqueProcessId;
+        std::cout << std::dec;
+        std::cout << "[*] PROCESS ID : " << processId << std::endl;
 
         ptrProcessInfo = (PSYSTEM_PROCESS_INFORMATION)((ULONG_PTR)ptrProcessInfo + ptrProcessInfo->NextEntryOffset);
     }
