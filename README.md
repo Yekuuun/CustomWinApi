@@ -1,6 +1,7 @@
 # CustomWinApi 📦
 
-this repo contains base code for reimplementing a custom version of GetModuleHandle( ) & GetProcAddress( ) functions without any imports crafting all headers by my hand using online ressources & github repos.
+This repo contains base code for reimplementing a custom version of GetModuleHandle( ) & GetProcAddress( ) functions without any imports crafting all headers by my hand using online ressources & github repos.
+I used process hacker to check my code & address returned by GetModuleHandle( ) :)
 
 ## Running program 
 
@@ -24,8 +25,6 @@ this repo contains base code for reimplementing a custom version of GetModuleHan
 ### Getting NtQuerySystemInformation to list processes 
 
 <img src="https://github.com/Yekuuun/CustomWinApi/blob/main/assets/ListProcess.png"></img>
-
-I used process hacker to check my code & address returned by GetModuleHandle( ) :)
 
 ---
 
