@@ -6,7 +6,7 @@
                   / /___/ /_/ (__  ) /_/ /_/ / / / / / / |/ |/ / / / / / ___ |/ /_/ / /  
                   \____/\__,_/____/\__/\____/_/ /_/ /_/|__/|__/_/_/ /_/_/  |_/ .___/_/   
                                                                             /_/          
-
+                        ----GetModuleHandle & GetProcAddress implementation----
 ```
 
 This repo contains base code for reimplementing a custom version of GetModuleHandle( ) & GetProcAddress( ) functions without any imports crafting all headers by my hand using online ressources & github repos.
